@@ -1,4 +1,4 @@
-[หน้าเว็บ.html](https://github.com/user-attachments/files/25177691/default.html)
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
