@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>รายการรายงาน</title>
+
+<style>
+body {font-family:sans-serif; background:#eee; padding:20px;}
+input, select {padding:6px; margin:4px;}
+button {padding:6px 12px;}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  background:white;
+}
+
+th {
+  background:#222;
+  color:white;
+  padding:10px;
+}
+
+td {
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<h2>รายการรายงาน</h2>
+
+<input id="seq" placeholder="ลำดับ">
+<input id="docno" placeholder="เลขที่">
+<input id="title" placeholder="เรื่อง">
+
+<select id="dept">
+  <option value="">-- เลือกหน่วยงาน --</option>
+  <option value="ฝ่ายหนังสือ">ฝ่ายหนังสือ</option>
+  <option value="ฝ่ายสัญชาติ">ฝ่ายสัญชาติ</option>
+</select>
+
+<input type="file" id="fileInput">
+
+<button id="addBtn">+ เพิ่มรายการ</button>
+
+<table>
+<thead>
+<tr>
+<th>ลำดับ</th>
+<th>เลขที่</th>
+<th>เรื่อง</th>
+<th>หน่วยงาน</th>
+<th>ไฟล์</th>
+<th>ลบ</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+
+<script>
+let db;
+
+// ---------- เปิดฐานข้อมูล ----------
+const openReq = indexedDB.open("reportDB_final", 1);
+
+openReq.onupgradeneeded = e=>{
+  db = e.target.result;
+  db.createObjectStore("items", {keyPath:"id", autoIncrement:true});
+};
+
+openReq.onsuccess = e=>{
+  db = e.target.result;
+  loadAll();
+};
+
+// ---------- โหลดข้อมูล ----------
+function loadAll(){
+  tbody.innerHTML = "";
+  const tx = db.transaction("items","readonly");
+  const store = tx.objectStore("items");
+
+  store.openCursor().onsuccess = e=>{
+    const cur = e.target.result;
+    if(cur){
+      drawRow(cur.value, cur.key);
+      cur.continue();
+    }
+  };
+}
+
+// ---------- วาดแถว ----------
+function drawRow(data,id){
+
+  const tr = document.createElement("tr");
+
+  let fileLink = "-";
+  if(data.file){
+    const url = URL.createObjectURL(data.file);
+    fileLink = `<a href="${url}" target="_blank">${data.filename}</a>`;
+  }
+
+  tr.innerHTML = `
+    <td>${data.seq || ""}</td>
+    <td>${data.docno || ""}</td>
+    <td>${data.title || ""}</td>
+    <td>${data.dept || ""}</td>
+    <td>${fileLink}</td>
+    <td><button onclick="del(${id})">ลบ</button></td>
+  `;
+
+  tbody.appendChild(tr);
+}
+
+// ---------- เพิ่มรายการ ----------
+addBtn.onclick = ()=>{
+
+  if(!db){
+    alert("ระบบยังไม่พร้อม");
+    return;
+  }
+
+  const file = fileInput.files[0] || null;
+
+  const data = {
+    seq: seq.value,
+    docno: docno.value,
+    title: title.value || (file ? file.name : ""),
+    dept: dept.value,
+    file: file,
+    filename: file ? file.name : ""
+  };
+
+  const tx = db.transaction("items","readwrite");
+  tx.objectStore("items").add(data);
+
+  tx.oncomplete = ()=>{
+    loadAll();
+
+    // เคลียร์ช่อง
+    seq.value="";
+    docno.value="";
+    title.value="";
+    dept.value="";
+    fileInput.value="";
+  };
+};
+
+// ---------- ลบ ----------
+function del(id){
+  const tx = db.transaction("items","readwrite");
+  tx.objectStore("items").delete(id);
+  tx.oncomplete = loadAll;
+}
+</script>
+
+</body>
+</html>
