@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>หน้าเว็บของฉัน</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>กรมการกงสุล</h1>
+        <p>หนังสือส่งออก สนง.หนังสือเดินทางเมืองพัทยา</p>
+    </header>
+
+    <main>
+       <div class="card">
+    <h2>เดือน มกราคม 2569</h2>
+    <p>หนังสือส่งออก</p>
+    
+<a href="file:///C:/Users/DELL/Desktop/%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%97%E0%B8%94%E0%B8%A5%E0%B8%AD%E0%B8%87%20%E0%B8%AB%E0%B9%89%E0%B8%B2%E0%B8%A1%E0%B8%A5%E0%B8%9A2.html" class="btn">เปิดรายการ</a>
+</div>
+
+<div class="card">
+    <h2>เดือน กุมภาพันธ์ 2569</h2>
+    <p>หนังสือส่งออก</p>
+    <a href="feb.html" class="btn">เปิดรายการ</a>
+</div>
+
+    </main>
+
+    <footer>
+        © 2026 สนง.หนังสือเดินทางพัทยา
+    </footer>
+
+</body>
+</html>
+
+
+
